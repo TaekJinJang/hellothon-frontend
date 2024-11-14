@@ -2,7 +2,7 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import QueryProvider from "@/providers/QueryProvider";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -24,7 +24,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ko">
       <body>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
