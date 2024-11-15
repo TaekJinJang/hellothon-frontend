@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --https --cert localhost.pem --key localhost-key.pem",
+    "dev": "next dev",
     "secure": "node server.js",
     "build": "next build",
     "start": "next start",
@@ -29,7 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^9.14.0",
+    "eslint": "8.57.0",
     "eslint-config-next": "15.0.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
