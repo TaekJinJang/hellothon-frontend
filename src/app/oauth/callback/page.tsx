@@ -1,13 +1,21 @@
 // src/app/oauth/callback/page.tsx
 "use client";
 
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import CenteredContainer from "@/components/CenteredContainer";
 import { requestInstagramAccessToken } from "@/services/instagram";
-import { useEffect } from "react";
 
 export default function OAuthCallbackPage() {
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <OAuthCallback />
+    </Suspense>
+  );
+}
+
+function OAuthCallback() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
