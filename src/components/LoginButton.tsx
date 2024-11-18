@@ -1,14 +1,27 @@
 "use client";
 
 import { Button } from "./ui/button";
+import Image from "next/image";
+import InstagramLogo from "@icons/instagramIcon.png";
 import React from "react";
+import { makeOAuthUrl } from "@/utils";
 
 export default function LoginButton() {
-  const handleLogin = () => {
-    // OAuth 인증 URL로 리디렉션
-    const redirectUri = process.env.NEXT_PUBLIC_OAUTH_REDIRECT_URI;
-    window.location.href = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=939297224922758&redirect_uri=${redirectUri}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
-  };
+  function OAuthLogin() {
+    window.location.href = makeOAuthUrl();
+  }
 
-  return <Button onClick={handleLogin}>인스타그램으로 로그인</Button>;
+  return (
+    <div className="w-256 h-56 flex items-center space-x-2">
+      <Button
+        onClick={OAuthLogin}
+        variant="outline"
+        size="lg"
+        className=" border-gray-300 bg-white text-gray-800 hover:bg-gray-100 hover:shadow-lg transition-all duration-200 rounded-full shadow-md"
+      >
+        <Image src={InstagramLogo} alt="Instagram logo" width={24} height={24} priority className="inline-block" />
+        <span>Sign in with Instagram</span>
+      </Button>
+    </div>
+  );
 }
