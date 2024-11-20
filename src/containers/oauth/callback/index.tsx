@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import CenteredContainer from "@/components/CenteredContainer";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { login } from "@/services/apis/authApi";
+import { login } from "@/services/apis/auth";
 
 export default function OAuthCallbackContainer() {
   return (

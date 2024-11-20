@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getValidToken } from "./authApi";
+import { getValidToken } from "./auth";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,

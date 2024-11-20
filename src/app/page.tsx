@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { getValidToken } from "@/services/apis/authApi";
+import { getValidToken } from "@/services/apis/auth";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 

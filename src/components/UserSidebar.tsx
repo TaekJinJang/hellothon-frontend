@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarProvider } from "./ui/sidebar";
 
 import Image from "next/image";
-import { getValidToken } from "@/services/apis/authApi";
+import { getValidToken } from "@/services/apis/auth";
 import { useGetUserInfo } from "@/services/hooks/info";
 import { useRouter } from "next/navigation";
 
@@ -16,13 +16,6 @@ const UserSidebar = () => {
       router.push("/oauth"); // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
     }
   }, [token, router]);
-
-  // 사용자 데이터 예시
-  const userData = {
-    name: "NAME",
-    instagramId: "instagram_id",
-    profilePicture: "/path/to/profile-picture.png",
-  };
 
   return (
     <SidebarProvider>

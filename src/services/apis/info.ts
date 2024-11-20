@@ -12,7 +12,7 @@ export const getUserInfo = async (): Promise<UserInfoProfileType> => {
     const response = await axiosInstance.get("/info/profile");
     return response.data;
   } catch (error) {
-    console.error("Error fetching user info:", error);
+    console.error("Error getting user info:", error);
     throw error;
   }
 };
