@@ -3,7 +3,7 @@
 import Menu from "@/components/Menu";
 import React from "react";
 
-export default function UserDashboardPage() {
+export default function UserPostsPage() {
   return (
     <div>
       <h1>사용자 대시보드</h1>

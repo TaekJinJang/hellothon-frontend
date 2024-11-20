@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     if (getValidToken() !== null) {
       // 유저 대시보드로 리디렉트
-      router.push("/user/dashboard");
+      router.push("/user/posts");
     }
   }, [router]);
   return (

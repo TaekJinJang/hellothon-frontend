@@ -26,7 +26,7 @@ function OAuthCallback() {
       login(code, redirectUri)
         .then(() => {
           // 유저 대시보드로 리디렉트
-          router.push("/user/dashboard");
+          router.push("/user/posts");
         })
         .catch((error) => {
           console.error(error);
