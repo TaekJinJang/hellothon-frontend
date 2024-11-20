@@ -12,7 +12,7 @@
         "allowSeparatedGroups": false
       }
     ],
-    "prettier/prettier": ["warn", { "endOfLine": "auto" }],
+    "prettier/prettier": "off",
     "@typescript-eslint/no-unused-vars": "off"
   }
 }

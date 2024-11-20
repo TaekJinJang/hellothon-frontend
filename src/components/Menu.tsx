@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { getValidToken } from "@/services/apis/authApi";
-import { useGetAccountInfo } from "@/services/hooks/info";
+import { useGetUserInfo } from "@/services/hooks/info";
 import { useRouter } from "next/navigation";
 
 const Menu = () => {
@@ -14,10 +14,10 @@ const Menu = () => {
     }
   }, [token, router]);
 
-  const { data, isLoading, error } = useGetAccountInfo();
+  const { data, isLoading, error } = useGetUserInfo();
 
   if (isLoading) {
-    return <p>Loading account info...</p>;
+    return <p>Loading user info...</p>;
   }
 
   if (error) {

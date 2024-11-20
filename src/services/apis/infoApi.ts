@@ -1,19 +1,18 @@
 import axiosInstance from "./client";
 
 // 계정 정보 불러오기
-type AccountInfoType = {
+type UserInfoProfileType = {
   name: string;
   username: string;
-  account_type: string;
-  followers_count: string;
+  profile_picture_url: string;
 };
 
-export const getAccountInfo = async (): Promise<AccountInfoType> => {
+export const getUserInfo = async (): Promise<UserInfoProfileType> => {
   try {
-    const response = await axiosInstance.get("/info");
+    const response = await axiosInstance.get("/info/profile");
     return response.data;
   } catch (error) {
-    console.error("Error fetching account info:", error);
+    console.error("Error fetching user info:", error);
     throw error;
   }
 };

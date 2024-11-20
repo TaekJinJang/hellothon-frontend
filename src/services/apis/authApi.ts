@@ -21,6 +21,10 @@ export const login = async (code: string, redirectUri: string): Promise<string> 
 
 // 유효한 토큰 가져오기
 export const getValidToken = (): string | null => {
+  if (typeof window === "undefined") {
+    return null; // 서버 사이드에서는 localStorage가 없으므로 null 반환
+  }
+
   const token = localStorage.getItem("token");
   const tokenExpiresAt = localStorage.getItem("tokenExpiresAt");
   if (!token || !tokenExpiresAt || Date.now() > parseInt(tokenExpiresAt)) {
