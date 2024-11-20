@@ -5,7 +5,19 @@ export const getMediaData = async (): Promise<MediaType[]> => {
     const response = await axiosInstance.get("/media");
     return response.data;
   } catch (error) {
-    console.error("Error fetching media data:", error);
+    console.error("Error getting media data:", error);
+    throw error;
+  }
+};
+export const getMediaDetail = async (id: string | undefined): Promise<MediaDetailType> => {
+  if (!id) {
+    throw new Error("Invalid ID");
+  }
+  try {
+    const response = await axiosInstance.get(`/media/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting media data:", error);
     throw error;
   }
 };

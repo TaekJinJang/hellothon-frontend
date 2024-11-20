@@ -1,5 +1,4 @@
-import { getUserInfo } from "../apis/infoApi";
-import { getValidToken } from "../apis/authApi";
+import { getUserInfo } from "../apis/info";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetUserInfo = () => {
