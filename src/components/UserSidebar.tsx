@@ -1,5 +1,4 @@
-"use client";
-
+import { BarChart3, Info, LogOut, MessageCircle } from "lucide-react";
 import React, { useEffect } from "react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarProvider } from "./ui/sidebar";
 
@@ -32,16 +31,28 @@ const UserSidebar = () => {
         <SidebarHeader className="p-4 border-b">
           <div className="flex flex-col items-center">
             <div className="rounded-full overflow-hidden w-24 h-24 mb-3">
-              <Image
-                src={data?.profile_picture_url ?? ""}
-                alt="Profile Picture"
-                width={96}
-                height={96}
-                className="object-cover"
-              />
+              {isLoading ? (
+                <div className="animate-pulse w-24 h-24 bg-gray-200 rounded-full"></div>
+              ) : (
+                <Image
+                  src={data?.profile_picture_url ?? ""}
+                  alt="Profile Picture"
+                  width={96}
+                  height={96}
+                  className="object-cover"
+                />
+              )}
             </div>
-            <h2 className="text-lg font-bold">{data?.name}</h2>
-            <p className="text-sm text-gray-500">@{data?.username}</p>
+            {isLoading ? (
+              <div className="animate-pulse w-32 h-6 bg-gray-200 rounded-md"></div>
+            ) : (
+              <h2 className="text-lg font-bold">{data?.name}</h2>
+            )}
+            {isLoading ? (
+              <div className="animate-pulse w-24 h-4 bg-gray-200 rounded-md"></div>
+            ) : (
+              <p className="text-sm text-gray-500">@{data?.username}</p>
+            )}
           </div>
         </SidebarHeader>
 
@@ -52,9 +63,7 @@ const UserSidebar = () => {
               onClick={() => router.push("/user/comments")}
               className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 p-2 rounded-md"
             >
-              <span role="img" aria-label="댓글 관리">
-                💬
-              </span>
+              <MessageCircle />
               <span className="ml-2">댓글 관리</span>
             </div>
 
@@ -62,9 +71,7 @@ const UserSidebar = () => {
               onClick={() => router.push("/user/insights")}
               className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 p-2 rounded-md mt-4"
             >
-              <span role="img" aria-label="인사이트">
-                📊
-              </span>
+              <BarChart3 />
               <span className="ml-2">인사이트</span>
             </div>
           </SidebarGroup>
@@ -76,9 +83,7 @@ const UserSidebar = () => {
             onClick={() => router.push("/help")}
             className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 p-2 rounded-md"
           >
-            <span role="img" aria-label="도움말">
-              ℹ️
-            </span>
+            <Info />
             <span className="ml-2">도움말</span>
           </div>
           <div
@@ -88,9 +93,7 @@ const UserSidebar = () => {
             }}
             className="flex items-center cursor-pointer text-red-600 hover:bg-red-50 p-2 rounded-md mt-4"
           >
-            <span role="img" aria-label="로그아웃">
-              🔓
-            </span>
+            <LogOut />
             <span className="ml-2">로그아웃</span>
           </div>
         </SidebarFooter>
