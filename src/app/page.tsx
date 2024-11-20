@@ -1,8 +1,17 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import LoginButton from "@/components/LoginButton";
+import { getValidToken } from "@/services/apis/authApi";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  useEffect(() => {
+    if (getValidToken() !== null) {
+      // 유저 대시보드로 리디렉트
+      router.push("/user/dashboard");
+    }
+  }, [router]);
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">

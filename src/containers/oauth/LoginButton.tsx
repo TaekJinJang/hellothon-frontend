@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../../components/ui/button";
 import Image from "next/image";
 import InstagramLogo from "@icons/instagramIcon.png";
 import React from "react";
