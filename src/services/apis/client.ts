@@ -1,7 +1,8 @@
 import axios from "axios";
+import { getValidToken } from "./authApi";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +12,7 @@ const axiosInstance = axios.create({
 // JWT를 Authorization 헤더에 자동으로 포함
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("jwt");
+    const token = getValidToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

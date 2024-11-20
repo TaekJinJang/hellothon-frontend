@@ -1,4 +1,3 @@
-// src/components/CenteredContainer.tsx
 "use client";
 
 import React from "react";
