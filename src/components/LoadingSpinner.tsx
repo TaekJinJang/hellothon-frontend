@@ -1,7 +1,7 @@
 // components/LoadingSpinner.js
 
 import Image from "next/image";
-import SpinnerImage from "@icons/loadingSpinner.png";
+import SpinnerImage from "@imgs/loadingSpinner.png";
 
 const LoadingSpinner = () => {
   return (

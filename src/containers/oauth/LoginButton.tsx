@@ -2,7 +2,7 @@
 
 import { Button } from "../../components/ui/button";
 import Image from "next/image";
-import InstagramLogo from "@icons/instagramIcon.png";
+import InstagramLogo from "@imgs/instagramIcon.png";
 import React from "react";
 import { makeOAuthUrl } from "@/utils";
 
