@@ -20,12 +20,12 @@ function MediaCardList({ mediaList, width = 180, height = 360 }: MediaCardListPr
             className={`bg-white shadow-md rounded-md flex flex-col justify-between`}
             style={{ width: `${width}px`, height: `${height}px` }}
           >
-            <CardHeader className="mb-4 flex justify-center items-center h-[130px] mt-4">
+            <CardHeader className="mb-4 flex justify-center items-center p-2">
               <Image
                 src={media.thumbnail_url}
                 alt="Thumbnail"
-                width={130} // 적절한 너비 설정
-                height={130} // 적절한 높이 설정
+                width={200}
+                height={130}
                 className="object-cover rounded-md"
               />
             </CardHeader>

@@ -1,14 +1,24 @@
 import { BarChart3, Info, LogOut, MessageCircle } from "lucide-react";
 import React, { useEffect } from "react";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarProvider } from "./ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarMenuButton,
+  SidebarProvider,
+} from "./ui/sidebar";
 import { getValidToken, logout } from "@/services/apis/auth";
+import { usePathname, useRouter } from "next/navigation";
 
 import Image from "next/image";
+import logo from "@imgs/logo.png";
 import { useGetUserInfo } from "@/services/hooks/info";
-import { useRouter } from "next/navigation";
 
 const UserSidebar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const token = getValidToken();
   const { data, isLoading, error } = useGetUserInfo();
   useEffect(() => {
@@ -25,9 +35,10 @@ const UserSidebar = () => {
 
   return (
     <SidebarProvider>
-      <Sidebar className="h-screen w-64 bg-white shadow-md flex flex-col">
+      <Sidebar className="w-64 bg-white flex flex-col p-4">
         {/* Sidebar Header */}
-        <SidebarHeader className="p-4 border-b">
+        <SidebarHeader className="">
+          <Image src={logo} alt="logo Image" objectFit="contain" width={144} height={48} className="mb-4" />
           <div className="flex flex-col items-center">
             <div className="rounded-full overflow-hidden w-24 h-24 mb-3">
               {isLoading ? (
@@ -56,11 +67,11 @@ const UserSidebar = () => {
         </SidebarHeader>
 
         {/* Sidebar Content */}
-        <SidebarContent className="flex-1 overflow-y-auto p-4">
+        <SidebarContent className="flex-1 overflow-y-auto border-t p-0">
           <SidebarGroup>
             <div
-              onClick={() => router.push("/user/comments")}
-              className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 p-2 rounded-md"
+              onClick={() => router.push("/user/posts")}
+              className={`flex items-center cursor-pointer ${pathname === "/user/posts" ? "bg-slate-100 text-slate-800" : "text-slate-600 hover:bg-slate-100"} px-2 py-2 mt-2 rounded-md`}
             >
               <MessageCircle />
               <span className="ml-2">댓글 관리</span>
@@ -68,7 +79,7 @@ const UserSidebar = () => {
 
             <div
               onClick={() => router.push("/user/insights")}
-              className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 p-2 rounded-md mt-4"
+              className={`flex items-center cursor-pointer ${pathname === "/user/insights" ? "bg-slate-100 text-slate-800" : "text-slate-600 hover:bg-slate-100"} px-2 py-2 mt-2 rounded-md`}
             >
               <BarChart3 />
               <span className="ml-2">인사이트</span>
@@ -79,15 +90,8 @@ const UserSidebar = () => {
         {/* Sidebar Footer */}
         <SidebarFooter className="p-4 border-t">
           <div
-            onClick={() => router.push("/help")}
-            className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 p-2 rounded-md"
-          >
-            <Info />
-            <span className="ml-2">도움말</span>
-          </div>
-          <div
             onClick={handleLogOut}
-            className="flex items-center cursor-pointer text-red-600 hover:bg-red-50 p-2 rounded-md mt-4"
+            className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 rounded-md"
           >
             <LogOut />
             <span className="ml-2">로그아웃</span>

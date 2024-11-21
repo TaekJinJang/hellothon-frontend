@@ -1,5 +1,7 @@
 import { MediaCardList, SkeletonMediaCardList } from "./MediaCardList";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+import { MessageCircle } from "lucide-react";
 import UserLayout from "@/layouts/UserLayout";
 import { useGetMedia } from "@/services/hooks/media";
 import { useState } from "react";
@@ -28,19 +30,29 @@ export default function UserPostsContainer() {
 
   const groupedData = data ? groupMediaByMonth(data, sortOrder) : {};
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOrder(e.target.value as "newest" | "oldest");
+  const handleSortChange = (value: "newest" | "oldest") => {
+    setSortOrder(value as "newest" | "oldest");
   };
 
   return (
     <UserLayout>
-      <main className="flex-1 p-6 bg-gray-50">
+      <main className="flex-1 p-6">
         <div className="mb-6">
-          <h2 className="text-xl font-bold mb-2">댓글 관리</h2>
-          <select className="border rounded-md p-2" onChange={handleSortChange} value={sortOrder}>
-            <option value="newest">최신순</option>
-            <option value="oldest">오래된 순</option>
-          </select>
+          <h2 className="text-xl font-bold mb-2 flex flex-row">
+            <MessageCircle className="mr-2" />
+            댓글 관리
+          </h2>
+          <div className="my-4">
+            <Select onValueChange={(value: "newest" | "oldest") => handleSortChange(value)} value={sortOrder}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">최신순</SelectItem>
+                <SelectItem value="oldest">오래된 순</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="space-y-8">
