@@ -1,9 +1,9 @@
 import { BarChart3, Info, LogOut, MessageCircle } from "lucide-react";
 import React, { useEffect } from "react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarProvider } from "./ui/sidebar";
+import { getValidToken, logout } from "@/services/apis/auth";
 
 import Image from "next/image";
-import { getValidToken } from "@/services/apis/auth";
 import { useGetUserInfo } from "@/services/hooks/info";
 import { useRouter } from "next/navigation";
 
@@ -16,6 +16,12 @@ const UserSidebar = () => {
       router.push("/oauth"); // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
     }
   }, [token, router]);
+
+  const handleLogOut = async () => {
+    await logout();
+    localStorage.removeItem("token"); // 로그아웃 처리
+    router.push("/oauth");
+  };
 
   return (
     <SidebarProvider>
@@ -42,7 +48,7 @@ const UserSidebar = () => {
               <h2 className="text-lg font-bold">{data?.name}</h2>
             )}
             {isLoading ? (
-              <div className="animate-pulse w-24 h-4 bg-gray-200 rounded-md"></div>
+              <div className="animate-pulse w-24 h-4 bg--gray200 rounded-md"></div>
             ) : (
               <p className="text-sm text-gray-500">@{data?.username}</p>
             )}
@@ -80,10 +86,7 @@ const UserSidebar = () => {
             <span className="ml-2">도움말</span>
           </div>
           <div
-            onClick={() => {
-              localStorage.removeItem("token"); // 로그아웃 처리
-              router.push("/login");
-            }}
+            onClick={handleLogOut}
             className="flex items-center cursor-pointer text-red-600 hover:bg-red-50 p-2 rounded-md mt-4"
           >
             <LogOut />

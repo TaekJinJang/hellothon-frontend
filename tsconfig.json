@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@imgs/*": ["./public/icons/*"],
+      "@imgs/*": ["./public/imgs/*"],
       "@svgs/*": ["./public/svgs/*"],
       "@/*": ["./src/*"]
     }

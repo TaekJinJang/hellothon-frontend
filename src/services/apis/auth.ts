@@ -18,6 +18,15 @@ export const login = async (code: string, redirectUri: string): Promise<string> 
     throw error;
   }
 };
+export const logout = async (): Promise<string> => {
+  try {
+    const response = await axiosInstance.get("/auth/logout");
+    return response.data;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    throw error;
+  }
+};
 
 // 유효한 토큰 가져오기
 export const getValidToken = (): string | null => {
