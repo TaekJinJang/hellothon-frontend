@@ -10,9 +10,9 @@ interface MediaCardListProps {
   height?: number;
 }
 
-function MediaCardList({ mediaList, width = 180, height = 360 }: MediaCardListProps) {
+function MediaCardList({ mediaList, width = 240, height = 380 }: MediaCardListProps) {
   return (
-    <div className="flex gap-4 pb-4 overflow-x-auto w-full">
+    <div className="flex gap-6 pb-4 overflow-x-auto w-full">
       {mediaList.map((media, index) => (
         <Link href={`/user/posts/${media.id}/comments`} key={index} passHref>
           <Card
@@ -36,15 +36,15 @@ function MediaCardList({ mediaList, width = 180, height = 360 }: MediaCardListPr
             </CardContent>
             <CardFooter className="flex flex-col items-start mt-4 space-y-2">
               <div className="flex items-center space-x-2">
-                <span className="text-gray-500 text-xs flex items-center">
+                <span className="text-slate-600 text-xs flex items-center">
                   <Heart size={12} className="mr-1" /> {media.like_count}
                 </span>
-                <span className="text-gray-500 text-xs flex items-center">
+                <span className="text-slate-600 text-xs flex items-center">
                   <MessageCircle size={12} className="mr-1" /> {media.comments_count}
                 </span>
               </div>
-              <div className="text-gray-500 text-xs flex items-center">
-                <Calendar size={12} className="mr-1" /> {new Date(media.timestamp).toLocaleDateString()}
+              <div className="text-slate-400 text-xs flex items-center">
+                <Calendar size={12} className="mr-1" /> {new Date(media.timestamp).toISOString().slice(0, 10)}
               </div>
             </CardFooter>
           </Card>
@@ -54,24 +54,36 @@ function MediaCardList({ mediaList, width = 180, height = 360 }: MediaCardListPr
   );
 }
 
-function SkeletonMediaCardList() {
+type SkeletonMediaCardListProps = {
+  count?: number;
+  width?: number;
+  height?: number;
+};
+
+function SkeletonMediaCardList({ count = 6, width = 240, height = 380 }: SkeletonMediaCardListProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold mb-4 bg-gray-200 w-1/5 h-6 rounded-md animate-pulse"></h3>
-      <div className="flex gap-4 pb-4">
-        {[...Array(6)].map((_, idx) => (
+      {/* 스켈레톤 카드 리스트 */}
+      <div className="flex gap-6 pb-4 overflow-x-auto w-full">
+        {[...Array(count)].map((_, idx) => (
           <Card
             key={idx}
-            className="bg-white shadow-md rounded-md w-[180px] h-[320px] flex flex-col justify-between animate-pulse"
+            className={`bg-white shadow-md rounded-md flex flex-col justify-between animate-pulse`}
+            style={{ width: `${width}px`, height: `${height}px` }}
           >
-            <CardHeader className="flex justify-center items-center h-[130px] mb-4">
-              <div className="w-[130px] h-[130px] bg-gray-200 rounded-md"></div>
+            {/* 카드 헤더 부분 */}
+            <CardHeader className="flex justify-center items-center p-2 mb-4">
+              <div className="w-full h-[130px] bg-gray-200 rounded-md"></div>
             </CardHeader>
-            <CardContent className="flex-grow min-h-[60px]">
+
+            {/* 카드 본문 부분 */}
+            <CardContent className="flex-grow min-h-[60px] px-2">
               <div className="h-4 w-3/4 bg-gray-200 mb-2 rounded-md"></div>
               <div className="h-4 w-1/2 bg-gray-200 rounded-md"></div>
             </CardContent>
-            <CardFooter className="flex flex-col items-start mt-4 space-y-2">
+
+            {/* 카드 푸터 부분 */}
+            <CardFooter className="flex flex-col items-start mt-4 space-y-2 px-2">
               <div className="flex items-center space-x-2">
                 <div className="w-10 h-4 bg-gray-200 rounded-md"></div>
                 <div className="w-10 h-4 bg-gray-200 rounded-md"></div>
@@ -84,5 +96,4 @@ function SkeletonMediaCardList() {
     </div>
   );
 }
-
 export { MediaCardList, SkeletonMediaCardList };

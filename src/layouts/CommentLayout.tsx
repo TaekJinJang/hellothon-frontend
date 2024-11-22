@@ -1,6 +1,9 @@
-import { MediaCardList } from "@/containers/user/posts/MediaCardList";
+import { MediaCardList, SkeletonMediaCardList } from "@/containers/user/posts/MediaCardList";
+
+import { ChevronLeft } from "lucide-react";
 import React from "react";
 import { useGetMediaDetail } from "@/services/hooks/media";
+import { useRouter } from "next/navigation";
 
 interface CommentLayoutProps {
   children: React.ReactNode;
@@ -9,18 +12,25 @@ interface CommentLayoutProps {
 }
 
 const CommentLayout = ({ children, postId, className }: CommentLayoutProps) => {
+  const router = useRouter();
   const { data: mediaDetail, isLoading, error } = useGetMediaDetail(postId);
-  if (!mediaDetail) {
-    return <></>;
-  }
+
   return (
     <>
-      <header className="p-6 border-b border-gray-200 text-xl font-semibold">댓글 관리</header>
-      <div className="flex p-6 gap-8">
-        <div className="w-1/4 p-4 ">
-          <MediaCardList mediaList={[mediaDetail]} width={240} height={400} />
+      <header className="px-12 py-10  text-xl font-semibold flex items-center">
+        <ChevronLeft className="mr-2 cursor-pointer" onClick={() => router.back()} />
+        댓글 관리
+      </header>
+
+      <div className="flex px-12 pb-12">
+        <div className="pr-12">
+          {isLoading ? (
+            <SkeletonMediaCardList count={1} width={240} height={468} />
+          ) : (
+            mediaDetail && <MediaCardList mediaList={[mediaDetail]} width={240} height={468} />
+          )}
         </div>
-        <main className="flex-1 p-4 ">{children}</main>
+        <main className="flex-1 ">{children}</main>
       </div>
     </>
   );

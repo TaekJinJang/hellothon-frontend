@@ -9,10 +9,10 @@ interface UserLayoutProps {
 const UserLayout = ({ children, className }: UserLayoutProps) => {
   return (
     <div className="flex">
-      <div className="w-64 bg-white">
+      <div className="w-80 bg-white">
         <UserSidebar />
       </div>
-      <main className="flex-1 p-6">{children}</main>
+      <main className="flex-1 pl-12 pt-10">{children}</main>
     </div>
   );
 };

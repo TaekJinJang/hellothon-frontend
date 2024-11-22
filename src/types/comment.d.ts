@@ -7,3 +7,10 @@ interface CommentType {
   timestamp: string;
   username: string;
 }
+
+interface ReplyType {
+  reply: string;
+}
+type CommentWithReplyType = CommentType & {
+  recommendedReplies?: string[]; // 선택적 필드
+};

@@ -35,7 +35,7 @@ const UserSidebar = () => {
 
   return (
     <SidebarProvider>
-      <Sidebar className="w-64 bg-white flex flex-col p-4">
+      <Sidebar className="w-80 bg-white flex flex-col p-6 shadow-xl">
         {/* Sidebar Header */}
         <SidebarHeader className="">
           <Image src={logo} alt="logo Image" objectFit="contain" width={144} height={48} className="mb-4" />
@@ -61,13 +61,14 @@ const UserSidebar = () => {
             {isLoading ? (
               <div className="animate-pulse w-24 h-4 bg--gray200 rounded-md"></div>
             ) : (
-              <p className="text-sm text-gray-500">@{data?.username}</p>
+              <div className="text-sm text-gray-500">@{data?.username}</div>
             )}
           </div>
         </SidebarHeader>
+        <div className="border-t my-8" />
 
         {/* Sidebar Content */}
-        <SidebarContent className="flex-1 overflow-y-auto border-t p-0">
+        <SidebarContent className="flex-1 overflow-y-auto p-0">
           <SidebarGroup>
             <div
               onClick={() => router.push("/user/posts")}
@@ -88,10 +89,10 @@ const UserSidebar = () => {
         </SidebarContent>
 
         {/* Sidebar Footer */}
-        <SidebarFooter className="p-4 border-t">
+        <SidebarFooter className="p-0 border-t pt-8">
           <div
             onClick={handleLogOut}
-            className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 rounded-md"
+            className="flex items-center cursor-pointer text-gray-700 hover:bg-gray-100 px-2 py-2 mt-2 rounded-md"
           >
             <LogOut />
             <span className="ml-2">로그아웃</span>
