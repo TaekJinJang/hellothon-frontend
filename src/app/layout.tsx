@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "insense",
     description: "인센스 : 인스타그램의 댓글을 센스있게 추천해주는 플랫폼",
     siteName: "insense",
-    images: "/imgs/logo.png",
+    images: "../../public/imgs/logo.png",
   },
 };
 

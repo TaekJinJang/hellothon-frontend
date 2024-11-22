@@ -1,3 +1,5 @@
+"use client";
+
 import { CommentCard, SkeletonCommentCardList } from "./CommentCard";
 import { useMemo, useState } from "react";
 
