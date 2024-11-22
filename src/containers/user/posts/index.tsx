@@ -1,12 +1,13 @@
 "use client";
 
+import { INSTAGRAM_REDIRECT_BUTTON, INSTAGRAM_URL, NO_POSTS_MESSAGE } from "@/utils/constants/messages";
 import { MediaCardList, SkeletonMediaCardList } from "./MediaCardList";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import Alert from "@/utils/Alert";
 import { Button } from "@/components/ui/button";
-import { ERROR_MESSAGE } from "@/utils/constants/alertMessage";
+import { ERROR_MESSAGE } from "@/utils/constants/alertMessages";
 import { MessageCircle } from "lucide-react";
+import { SortSelect } from "@/components/SortSelect";
 import UserLayout from "@/layouts/UserLayout";
 import { useGetMedia } from "@/services/hooks/media";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,9 +26,9 @@ export default function UserPostsContainer() {
     // username이 존재하면 인스타그램 프로필로 이동
     if (userInfo?.username) {
       const username = userInfo.username;
-      window.open(`https://www.instagram.com/${username}/`, "_blank");
+      window.open(`${INSTAGRAM_URL}${username}/`, "_blank");
     } else {
-      window.open(`https://www.instagram.com/`, "_blank");
+      window.open(INSTAGRAM_URL, "_blank");
     }
   };
 
@@ -58,36 +59,27 @@ export default function UserPostsContainer() {
   return (
     <UserLayout>
       <main className="flex-1 ">
-        <div className="mb-6">
+        <header className="mb-6">
           <h3 className="text-slate-800 mb-2 flex flex-row">
             <MessageCircle className="mr-2" />
             댓글 관리
           </h3>
           <div className="my-4">
-            <Select onValueChange={(value: "newest" | "oldest") => handleSortChange(value)} value={sortOrder}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">최신순</SelectItem>
-                <SelectItem value="oldest">오래된 순</SelectItem>
-              </SelectContent>
-            </Select>
+            <SortSelect sortOrder={sortOrder} onSortChange={handleSortChange} />
           </div>
-        </div>
+        </header>
 
         <div className="space-y-8">
           {isLoading ? (
+            // 로딩 중일 때 스켈레톤 UI 표시
             <div className="space-y-4">
               <SkeletonMediaCardList />
             </div>
           ) : Object.keys(groupedData).length === 0 || error ? (
             <div className="flex items-center flex-col">
-              <div className="text-center text-slate-400  my-6">
-                불러올 게시글이 없습니다. 먼저 인스타그램에 게시글을 업로드해주세요.
-              </div>
+              <div className="text-center text-slate-400  my-6">{NO_POSTS_MESSAGE}</div>
               <Button size={"sm"} onClick={handleInstagramRedirect}>
-                인스타그램 바로가기
+                {INSTAGRAM_REDIRECT_BUTTON}
               </Button>
               {error && <Alert message={ERROR_MESSAGE} />}
             </div>

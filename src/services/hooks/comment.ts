@@ -1,7 +1,6 @@
-import { UseQueryResult, useQuery, useQueryClient } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getComments, postRecommendReply } from "../apis/comment";
 
-import { getMediaDetail } from "../apis/media";
 import { useEffect } from "react";
 
 export const useGetComments = (
@@ -12,7 +11,7 @@ export const useGetComments = (
     queryKey: ["comments", id, type],
     queryFn: () => getComments(id as string, type),
     enabled: !!id,
-    staleTime: 0,
+    staleTime: 60 * 1000, // 1분간 데이터 유지
     retry: false,
   });
 };
@@ -30,8 +29,9 @@ export const useGetCommentsWithAsyncReplies = (
     queryKey: ["comments", id, type],
     queryFn: () => getComments(id as string, type),
     enabled: !!id,
-    staleTime: 0,
+    staleTime: 60 * 1000, // 1분간 데이터 유지
     retry: false,
+    placeholderData: keepPreviousData, // 이전 데이터를 유지하면서 백그라운드에서 새로운 데이터를 가져오기
   });
 
   useEffect(() => {

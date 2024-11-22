@@ -8,7 +8,13 @@ const ErrorAlertWrapper = () => {
   const error = useAlertStore((state) => state.error);
   const setError = useAlertStore((state) => state.setError);
 
-  return <>{error && <Alert message={error} type="error" duration={5000} onClose={() => setError(null)} />}</>;
+  const handleClose = () => {
+    setError(null);
+  };
+
+  if (!error) return null;
+
+  return <Alert message={error} type="error" duration={5000} onClose={handleClose} />;
 };
 
 export default ErrorAlertWrapper;
