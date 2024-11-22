@@ -10,12 +10,12 @@ import Image from "next/image";
 import loadingSpinner from "@imgs/loadingSpinner.gif";
 import { login } from "@/services/apis/auth";
 import logo from "@imgs/logo.png";
-import useAuthStore from "@/store/authStore";
+import useAlertStore from "@/store/alertStore";
 
 export default function OAuthCallbackContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const setError = useAuthStore((state) => state.setError);
+  const setError = useAlertStore((state) => state.setError);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {

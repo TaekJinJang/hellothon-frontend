@@ -5,9 +5,9 @@ interface AuthState {
   setError: (error: string | null) => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
+const useAlertStore = create<AuthState>((set) => ({
   error: null,
   setError: (error) => set({ error }),
 }));
 
-export default useAuthStore;
+export default useAlertStore;
