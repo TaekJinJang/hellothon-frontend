@@ -46,7 +46,7 @@ export default function OAuthCallbackContainer() {
       </div>
       {isLoading ? (
         <>
-          <Image src={loadingSpinner} alt="loadingSpinner" width={300} height={300} />
+          <Image src={loadingSpinner} alt="loadingSpinner" width={300} height={300} unoptimized={true} />
           <div className="text-slate-800">인플루언서님의 마음을 담는 중입니다.</div>
           <div className="text-slate-800">잠시만 기다려 주세요.</div>
         </>
