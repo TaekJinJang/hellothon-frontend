@@ -20,4 +20,4 @@ yarn secure
 
 
 
-브라우저에서 https://xaekxtkwpxqaaqyh.tunnel-pt.elice.io으로 접속하면 프로젝트를 확인할 수 있습니다.
+브라우저에서 https://xaekxtkwpxqaaqyh.tunnel-pt.elice.io 으로 접속하면 프로젝트를 확인할 수 있습니다.
