@@ -19,7 +19,9 @@ interface ConfirmDialogProps {
   cancelText?: string;
   onConfirm: () => void;
   onCancel?: () => void;
-  children: React.ReactNode; // 트리거 버튼으로 사용할 children 추가
+  isOpen?: boolean;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  children?: React.ReactNode; // 트리거 버튼으로 사용할 children 추가
 }
 
 const ConfirmDialog = ({
@@ -29,11 +31,16 @@ const ConfirmDialog = ({
   cancelText = "취소",
   onConfirm,
   onCancel,
+  isOpen,
+  setIsOpen,
   children,
 }: ConfirmDialogProps) => {
+  // 모달을 외부에서 열기 위한 경우의 상태 제어
+  const open = typeof isOpen !== "undefined" && setIsOpen ? isOpen : undefined;
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={setIsOpen}>
+      {children && <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>

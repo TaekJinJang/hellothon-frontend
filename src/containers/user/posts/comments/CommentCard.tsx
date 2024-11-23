@@ -32,11 +32,9 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
   const [editingIndex, setEditingIndex] = useState<CommentCardState["editingIndex"]>(null);
   const [editedReply, setEditedReply] = useState<CommentCardState["editedReply"]>([]);
   const [isLoadingReplyReload, setIsLoadingReplyReload] = useState<CommentCardState["isLoadingReplyReload"]>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
   const queryClient = useQueryClient();
-
-  const handleEditClick = (index: number) => {
-    setEditingIndex(index);
-  };
 
   const handleSaveClick = async (replyObj: ReplyType) => {
     setEditingIndex(null);
@@ -51,37 +49,56 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
     }
   };
 
-  const handlePostInstagramReply = async (commentId: string, replyObj: ReplyType) => {
-    try {
-      await postInstagramReply(commentId, replyObj);
-      showSuccessAlert(SUCCESS_REPLY_UPLOAD);
-    } catch (error) {
-      showErrorAlert(ERROR_MESSAGE);
-    }
+  const handleReplyReload = async () => {
+    confirmEditAction(async () => {
+      // 댓글 재생성 로직
+      try {
+        setIsLoadingReplyReload(true);
+        const recommendedRepliesResponse = await postRecommendReply(comment, 3);
+        queryClient.setQueryData(["comments", postId, type], (oldData: CommentWithReplyType[]) => {
+          if (!oldData) return []; // 캐시에 데이터가 없는 경우 빈 배열 반환
+          return oldData.map((item) => {
+            if (item.id === comment.id) {
+              return {
+                ...item,
+                recommendedReplies: recommendedRepliesResponse, // 예시로 빈 배열 설정, 실제로는 새로운 추천 답글 데이터로 업데이트해야 함
+              };
+            }
+            return item;
+          });
+        });
+      } catch (error) {
+        showErrorAlert(ERROR_REPLY_RELOAD);
+      } finally {
+        setIsLoadingReplyReload(false);
+      }
+    });
   };
 
-  const handleReplyReload = async () => {
-    // 댓글 재생성 로직
-    try {
-      setIsLoadingReplyReload(true);
-      const recommendedRepliesResponse = await postRecommendReply(comment, 3);
-      queryClient.setQueryData(["comments", postId, type], (oldData: CommentWithReplyType[]) => {
-        if (!oldData) return []; // 캐시에 데이터가 없는 경우 빈 배열 반환
-        return oldData.map((item) => {
-          if (item.id === comment.id) {
-            return {
-              ...item,
-              recommendedReplies: recommendedRepliesResponse, // 예시로 빈 배열 설정, 실제로는 새로운 추천 답글 데이터로 업데이트해야 함
-            };
-          }
-          return item;
-        });
-      });
-    } catch (error) {
-      showErrorAlert(ERROR_REPLY_RELOAD);
-    } finally {
-      setIsLoadingReplyReload(false);
+  const handlePostInstagramReply = (commentId: string, replyObj: ReplyType) => {
+    confirmEditAction(async () => {
+      try {
+        await postInstagramReply(commentId, replyObj);
+        showSuccessAlert(SUCCESS_REPLY_UPLOAD);
+      } catch (error) {
+        showErrorAlert(ERROR_MESSAGE);
+      }
+    });
+  };
+
+  // 답글 편집중 다른 행동을 한다면 dialog띄움
+  const confirmEditAction = (actionCallback: () => void) => {
+    if (editingIndex !== null) {
+      // 현재 편집 중인 경우 확인 다이얼로그 열기
+      setPendingAction(() => actionCallback);
+      setIsDialogOpen(true);
+    } else {
+      // 편집 중이 아니면 바로 액션 실행
+      actionCallback();
     }
+  };
+  const handleEditClick = (index: number) => {
+    confirmEditAction(() => setEditingIndex(index));
   };
 
   const loadingText = `인플루언서님의 마음을 담는 중 입니다${".".repeat(dotCount)}`;
@@ -102,6 +119,22 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
 
   return (
     <div className="border rounded-lg shadow-md p-4">
+      <ConfirmDialog
+        title="편집 중입니다. 저장하시겠습니까?"
+        description="현재 편집된 답글을 저장하고 계속 진행하시겠습니까?"
+        isOpen={isDialogOpen}
+        setIsOpen={setIsDialogOpen}
+        onConfirm={() => {
+          if (pendingAction && editingIndex !== null) {
+            handleSaveClick(editedReply[editingIndex]);
+            setPendingAction(null);
+            pendingAction();
+          }
+        }}
+        onCancel={() => {
+          setPendingAction(null);
+        }}
+      />
       <div className="border-b pb-4 mb-4">
         <div className="flex justify-between items-center">
           <p className="font-semibold">{comment.username}</p>
