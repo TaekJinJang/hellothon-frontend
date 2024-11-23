@@ -16,7 +16,7 @@ function MediaCardList({ mediaList, width = 240, height = 380, isCarousel = true
   const mediaLength = mediaList.length;
   return (
     <div className="w-full mx-auto max-w-5xl">
-      <Carousel opts={{ active: isCarousel, align: "start", startIndex: 4 }} className="w-full">
+      <Carousel opts={{ active: isCarousel, align: "start" }} className="w-full">
         <CarouselContent className="-ml-1">
           {mediaList.map((media, index) => (
             <CarouselItem key={index} className="pl-1 md:basis-1/3 lg:basis-1/4">
