@@ -11,11 +11,16 @@ export const getComments = async (id: string, type: "positive" | "negative"): Pr
 };
 
 //추천 답글 데이터를 생성한다.
-export const postRecommendReply = async (comment: CommentType, limit: number): Promise<ReplyType[]> => {
+export const postRecommendReply = async (
+  comment: CommentType,
+  limit: number,
+  refresh?: boolean,
+): Promise<ReplyType[]> => {
   try {
     const response = await axiosInstance.post("/comment/reply/recommend", comment, {
       params: {
         limit,
+        refresh,
       },
     });
     return response.data;

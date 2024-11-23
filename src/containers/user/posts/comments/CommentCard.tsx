@@ -54,7 +54,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
       // 댓글 재생성 로직
       try {
         setIsLoadingReplyReload(true);
-        const recommendedRepliesResponse = await postRecommendReply(comment, 3);
+        const recommendedRepliesResponse = await postRecommendReply(comment, 3, true);
         queryClient.setQueryData(["comments", postId, type], (oldData: CommentWithReplyType[]) => {
           if (!oldData) return []; // 캐시에 데이터가 없는 경우 빈 배열 반환
           return oldData.map((item) => {
