@@ -5,6 +5,7 @@ import { showErrorAlert, showSuccessAlert } from "@/components/AlertWrapper";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +19,7 @@ interface CommentCardProps {
 interface CommentCardState {
   dotCount: number;
   showOriginalText: boolean;
+  showUploadDialog: boolean;
   editingIndex: number | null;
   editedReply: ReplyType[];
 }
@@ -27,6 +29,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
   const [showOriginalText, setShowOriginalText] = useState<CommentCardState["showOriginalText"]>(false);
   const [editingIndex, setEditingIndex] = useState<CommentCardState["editingIndex"]>(null);
   const [editedReply, setEditedReply] = useState<CommentCardState["editedReply"]>([]);
+  const [showUploadDialog, setShowUploadDialog] = useState<CommentCardState["showUploadDialog"]>(false);
   const queryClient = useQueryClient();
 
   const handleEditClick = (index: number) => {
@@ -154,14 +157,15 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
                     >
                       <Edit3 size={16} />
                     </button>
-                    <button
-                      className="flex items-center justify-center text-slate-500 hover:text-slate-700 transition w-6 h-6 border rounded-md bg-white "
-                      onClick={() => {
-                        handlePostInstagramReply(comment.id, replyObj);
-                      }}
+                    <ConfirmDialog
+                      title="업로드하시겠습니까?"
+                      description="인스타그램에 답글이 자동으로 업로드됩니다. 이 작업은 취소할 수 없습니다."
+                      onConfirm={() => handlePostInstagramReply(comment.id, replyObj)}
                     >
-                      <Send size={16} />
-                    </button>
+                      <button className="flex items-center justify-center text-slate-500 hover:text-slate-700 transition w-6 h-6 border rounded-md bg-white ">
+                        <Send size={16} />
+                      </button>
+                    </ConfirmDialog>
                   </div>
                 </div>
               )}
