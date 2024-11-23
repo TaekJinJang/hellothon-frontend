@@ -60,7 +60,7 @@ export default function UserPostsContainer() {
     <UserLayout>
       <main className="flex-1 ">
         <header className="mb-6">
-          <h3 className="text-slate-800 mb-2 flex flex-row">
+          <h3 className="text-slate-800 mb-2 flex flex-row items-center">
             <MessageCircle className="mr-2" />
             댓글 관리
           </h3>

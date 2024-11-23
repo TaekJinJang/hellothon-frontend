@@ -1,7 +1,64 @@
 import { UseQueryResult, keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getComments, postRecommendReply } from "../apis/comment";
+import {
+  getComments,
+  getEmotionalInsight,
+  getEmotionalSummary,
+  getMotivationalInsight,
+  getMotivationalSummary,
+  postRecommendReply,
+} from "../apis/comment";
 
 import { useEffect } from "react";
+
+// Motivational Summary & Insight 데이터를 묶어서 관리하는 훅
+export const useGetMotivationalData = (): {
+  summary: UseQueryResult<CommentSummaryType, Error>;
+  insight: UseQueryResult<CommentInsightType[], Error>;
+} => {
+  const motivationalSummary = useQuery<CommentSummaryType, Error>({
+    queryKey: ["motivationalSummary"],
+    queryFn: () => getMotivationalSummary(),
+    staleTime: 60 * 1000 * 60, // 60분간 데이터 유지
+    retry: false,
+  });
+
+  const motivationalInsight = useQuery<CommentInsightType[], Error>({
+    queryKey: ["motivationalInsight"],
+    queryFn: () => getMotivationalInsight(),
+    staleTime: 60 * 1000 * 60, // 60분간 데이터 유지
+    retry: false,
+  });
+
+  return {
+    summary: motivationalSummary,
+    insight: motivationalInsight,
+  };
+};
+
+// Emotional Summary & Insight 데이터를 묶어서 관리하는 훅
+export const useGetEmotionalData = (): {
+  summary: UseQueryResult<CommentSummaryType, Error>;
+  insight: UseQueryResult<CommentInsightType[], Error>;
+} => {
+  const emotionalSummary = useQuery<CommentSummaryType, Error>({
+    queryKey: ["emotionalSummary"],
+    queryFn: () => getEmotionalSummary(),
+    staleTime: 60 * 1000 * 60, // 60분간 데이터 유지
+    retry: false,
+  });
+
+  const emotionalInsight = useQuery<CommentInsightType[], Error>({
+    queryKey: ["emotionalInsight"],
+    queryFn: () => getEmotionalInsight(),
+    staleTime: 60 * 1000 * 60, // 60분간 데이터 유지
+    retry: false,
+  });
+
+  return {
+    summary: emotionalSummary,
+    insight: emotionalInsight,
+  };
+};
 
 export const useGetComments = (
   id: string | undefined,

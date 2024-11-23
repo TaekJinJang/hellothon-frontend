@@ -5,6 +5,6 @@ export const useGetUserInfo = () => {
   return useQuery({
     queryKey: ["accountInfo"],
     queryFn: () => getUserInfo(),
-    staleTime: 5 * 60 * 1000, // 데이터가 신선하게 유지될 시간
+    staleTime: 60 * 60 * 1000, // 60분간 데이터 유지
   });
 };

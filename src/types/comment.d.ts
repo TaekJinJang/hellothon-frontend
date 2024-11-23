@@ -15,3 +15,12 @@ interface ReplyType {
 type CommentWithReplyType = CommentType & {
   recommendedReplies?: ReplyType[]; // 선택적 필드
 };
+
+interface CommentSummaryType {
+  text: string;
+  timestamp: string;
+}
+interface CommentInsightType {
+  text: string;
+  timestamp: string;
+}

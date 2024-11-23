@@ -48,3 +48,44 @@ export const postInstagramReply = async (postId: string, replyObj: ReplyType): P
     throw error;
   }
 };
+
+// 감성적 충성도 댓글 요약
+export const getEmotionalSummary = async (): Promise<CommentSummaryType> => {
+  try {
+    const response = await axiosInstance.get(`/comment/emotional/summary`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting emotionalSummary data:", error);
+    throw error;
+  }
+};
+// 감성적 충성도 인사이트 제공
+export const getEmotionalInsight = async (): Promise<CommentInsightType[]> => {
+  try {
+    const response = await axiosInstance.get(`/comment/emotional/insight`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting emotionalInsight data:", error);
+    throw error;
+  }
+};
+// 의욕적 충성도 댓글 요약
+export const getMotivationalSummary = async (): Promise<CommentSummaryType> => {
+  try {
+    const response = await axiosInstance.get(`/comment/motivational/summary`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting motivationalSummary data:", error);
+    throw error;
+  }
+};
+// 의욕적 충성도 인사이트 제공
+export const getMotivationalInsight = async (): Promise<CommentInsightType[]> => {
+  try {
+    const response = await axiosInstance.get(`/comment/motivational/insight`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting motivationalInsight data:", error);
+    throw error;
+  }
+};

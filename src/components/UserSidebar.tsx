@@ -88,8 +88,8 @@ const UserSidebar = () => {
             </div>
 
             <div
-              onClick={() => router.push("/user/insights")}
-              className={`flex items-center cursor-pointer ${pathname === "/user/insights" ? "bg-slate-100 text-slate-800" : "text-slate-600 hover:bg-slate-100"} px-2 py-2 mt-2 rounded-md`}
+              onClick={() => router.push("/user/insight")}
+              className={`flex items-center cursor-pointer ${pathname === "/user/insight" ? "bg-slate-100 text-slate-800" : "text-slate-600 hover:bg-slate-100"} px-2 py-2 mt-2 rounded-md`}
             >
               <BarChart3 />
               <span className="ml-2">인사이트</span>
