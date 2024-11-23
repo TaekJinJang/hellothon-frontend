@@ -1,5 +1,5 @@
-import { ERROR_MESSAGE, SUCCESS_REPLY_UPLOAD } from "@/utils/constants/alertMessages";
-import { Edit3, RefreshCcw, Save, Send, Wand2 } from "lucide-react";
+import { AlertCircle, Edit3, RefreshCcw, Save, Send, Wand2 } from "lucide-react";
+import { ERROR_MESSAGE, ERROR_REPLY_RELOAD, SUCCESS_REPLY_UPLOAD } from "@/utils/constants/alertMessages";
 import { postInstagramReply, postRecommendReply, updateRecommendReply } from "@/services/apis/comment";
 import { showErrorAlert, showSuccessAlert } from "@/components/AlertWrapper";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ interface CommentCardProps {
 interface CommentCardState {
   dotCount: number;
   showOriginalText: boolean;
-  showUploadDialog: boolean;
+  isLoadingReplyReload: boolean;
   editingIndex: number | null;
   editedReply: ReplyType[];
 }
@@ -29,7 +29,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
   const [showOriginalText, setShowOriginalText] = useState<CommentCardState["showOriginalText"]>(false);
   const [editingIndex, setEditingIndex] = useState<CommentCardState["editingIndex"]>(null);
   const [editedReply, setEditedReply] = useState<CommentCardState["editedReply"]>([]);
-  const [showUploadDialog, setShowUploadDialog] = useState<CommentCardState["showUploadDialog"]>(false);
+  const [isLoadingReplyReload, setIsLoadingReplyReload] = useState<CommentCardState["isLoadingReplyReload"]>(false);
   const queryClient = useQueryClient();
 
   const handleEditClick = (index: number) => {
@@ -58,23 +58,28 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
     }
   };
 
-  const handleReplyRegenerate = async () => {
+  const handleReplyReload = async () => {
     // 댓글 재생성 로직
-    // 추천 답글을 요청할 때 limit 전달
-    const recommendedRepliesResponse = await postRecommendReply(comment, 3);
-
-    queryClient.setQueryData(["comments", postId, type], (oldData: CommentWithReplyType[]) => {
-      if (!oldData) return []; // 캐시에 데이터가 없는 경우 빈 배열 반환
-      return oldData.map((item) => {
-        if (item.id === comment.id) {
-          return {
-            ...item,
-            recommendedReplies: recommendedRepliesResponse, // 예시로 빈 배열 설정, 실제로는 새로운 추천 답글 데이터로 업데이트해야 함
-          };
-        }
-        return item;
+    try {
+      setIsLoadingReplyReload(true);
+      const recommendedRepliesResponse = await postRecommendReply(comment, 3);
+      queryClient.setQueryData(["comments", postId, type], (oldData: CommentWithReplyType[]) => {
+        if (!oldData) return []; // 캐시에 데이터가 없는 경우 빈 배열 반환
+        return oldData.map((item) => {
+          if (item.id === comment.id) {
+            return {
+              ...item,
+              recommendedReplies: recommendedRepliesResponse, // 예시로 빈 배열 설정, 실제로는 새로운 추천 답글 데이터로 업데이트해야 함
+            };
+          }
+          return item;
+        });
       });
-    });
+    } catch (error) {
+      showErrorAlert(ERROR_REPLY_RELOAD);
+    } finally {
+      setIsLoadingReplyReload(false);
+    }
   };
 
   const loadingText = `인플루언서님의 마음을 담는 중 입니다${".".repeat(dotCount)}`;
@@ -120,7 +125,20 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
         <Wand2 className="mr-2" width={16} /> 추천 답글
       </div>
 
-      {comment.recommendedReplies && comment.recommendedReplies.length > 0 ? (
+      {isLoadingReplyReload ? (
+        <div>
+          {" "}
+          <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start my-2">
+            <p className="text-slate-700 font-medium">{loadingText}</p>
+          </div>{" "}
+          <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start my-2">
+            <p className="text-slate-700 font-medium">{loadingText}</p>
+          </div>{" "}
+          <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start my-2">
+            <p className="text-slate-700 font-medium">{loadingText}</p>
+          </div>
+        </div>
+      ) : comment.recommendedReplies && comment.recommendedReplies.length > 0 ? (
         comment.recommendedReplies.map((replyObj, index) => {
           const replyText = editedReply[index]?.reply;
           const isOverLimit = replyText?.length > 2200;
@@ -149,7 +167,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
                 </div>
               ) : (
                 <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start">
-                  <p className="text-slate-700 font-medium">{replyObj.reply ?? loadingText}</p>
+                  <p className="text-slate-700 font-medium">{replyObj.reply}</p>
                   <div className="flex items-center space-x-2">
                     <button
                       className="flex items-center justify-center text-slate-500 hover:text-slate-700 transition w-6 h-6 border rounded-md bg-white "
@@ -175,12 +193,27 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
             </div>
           );
         })
-      ) : (
-        <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start">
+      ) : comment.recommendedReplies === undefined ? (
+        // 생성중일 때
+        <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start my-2">
           <p className="text-slate-700 font-medium">{loadingText}</p>
         </div>
+      ) : (
+        // 실패했을 때
+        <div className="my-2">
+          {" "}
+          <div className="border border-slate-300 rounded-md p-4 bg-slate-50 h-52 flex justify-center">
+            <p className="text-slate-400 font-medium flex justify-center items-center flex-col  ">
+              <AlertCircle size={17} />
+              추천 답글 생성에 실패했습니다. 아래 버튼을 눌러 새로고침 해주세요.
+            </p>
+          </div>
+        </div>
       )}
-      <Button onClick={handleReplyRegenerate} className="bg-slate-900 w-full hover:bg-slate-700">
+      <Button
+        onClick={handleReplyReload}
+        className={`${isLoadingReplyReload ? "bg-slate-400" : "bg-slate-900 "}w-full hover:bg-slate-700 `}
+      >
         <RefreshCcw />
         추천 답글 재생성하기
       </Button>

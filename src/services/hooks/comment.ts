@@ -60,7 +60,7 @@ export const useGetCommentsWithAsyncReplies = (
 
                 return { ...comment, recommendedReplies: recommendedRepliesResponse };
               } catch {
-                return comment; // 추천 답글 요청 실패 시 기존 댓글 유지
+                return { ...comment, recommendedReplies: [] }; // 추천 답글 요청 실패 시 기존 댓글 유지
               }
             }),
           );
