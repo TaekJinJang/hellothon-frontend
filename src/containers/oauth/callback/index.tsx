@@ -42,7 +42,6 @@ export default function OAuthCallbackContainer() {
     if (code) {
       requestAccessToken(code);
     } else {
-      setAlert(LOGIN_FAIL_MESSAGE, "error");
       router.push("/oauth");
     }
   }, [searchParams, router, setAlert]);

@@ -36,6 +36,10 @@ const UserSidebar = () => {
     router.push("/oauth");
   };
 
+  const handleLogo = () => {
+    router.push("/user/posts");
+  };
+
   return (
     <SidebarProvider>
       {/* 모바일일 때는 SidebarTrigger 버튼으로 사이드바 토글 */}
@@ -47,7 +51,15 @@ const UserSidebar = () => {
       <Sidebar className="w-80 sm:w-64 xl:w-80  bg-white flex flex-col p-6 shadow-xl">
         {/* Sidebar Header */}
         <SidebarHeader className="">
-          <Image src={logo} alt="logo Image" objectFit="contain" width={144} height={48} className="mb-4" />
+          <Image
+            src={logo}
+            alt="logo Image"
+            objectFit="contain"
+            width={144}
+            height={48}
+            className="mb-4  cursor-pointer"
+            onClick={handleLogo}
+          />
           <div className="flex flex-col items-center">
             <div className="rounded-full overflow-hidden w-24 h-24 mb-3">
               {isLoading ? (

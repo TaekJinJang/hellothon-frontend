@@ -189,6 +189,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
                     onChange={(e) =>
                       setEditedReply((prev) => prev.map((r, i) => (i === index ? { ...r, reply: e.target.value } : r)))
                     }
+                    disabled={isOverLimit}
                     className={"w-full mr-4 text-slate-700 font-medium border-none overflow-hidden resize-none"}
                   />
 
