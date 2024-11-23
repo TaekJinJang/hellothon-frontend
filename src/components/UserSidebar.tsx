@@ -8,6 +8,7 @@ import {
   SidebarHeader,
   SidebarMenuButton,
   SidebarProvider,
+  SidebarTrigger,
 } from "./ui/sidebar";
 import { getValidToken, logout } from "@/services/apis/auth";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,12 +16,14 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "@imgs/logo.png";
 import { useGetUserInfo } from "@/services/hooks/info";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const UserSidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const token = getValidToken();
   const { data, isLoading, error } = useGetUserInfo();
+  const isMobile = useIsMobile();
   useEffect(() => {
     if (!token) {
       router.push("/oauth"); // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
@@ -35,7 +38,13 @@ const UserSidebar = () => {
 
   return (
     <SidebarProvider>
-      <Sidebar className="w-80 bg-white flex flex-col p-6 shadow-xl">
+      {/* 모바일일 때는 SidebarTrigger 버튼으로 사이드바 토글 */}
+      {isMobile && (
+        <div className="mt-10 ml-5 pr-5 flex justify-center border-r">
+          <SidebarTrigger className="w-12 h-12 bg-gray-100 shadow-md" />
+        </div>
+      )}
+      <Sidebar className="w-80 sm:w-64 xl:w-80  bg-white flex flex-col p-6 shadow-xl">
         {/* Sidebar Header */}
         <SidebarHeader className="">
           <Image src={logo} alt="logo Image" objectFit="contain" width={144} height={48} className="mb-4" />
