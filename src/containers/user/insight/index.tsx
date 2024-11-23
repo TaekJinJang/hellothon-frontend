@@ -25,7 +25,9 @@ export default function UserInsightContainer() {
   const error =
     emotionalSummary.error || emotionalInsight.error || motivationalSummary.error || motivationalInsight.error;
   useEffect(() => {
-    showErrorAlert(ERROR_MESSAGE);
+    if (error) {
+      showErrorAlert(ERROR_MESSAGE);
+    }
   }, [error]);
 
   const userName = infoData?.name;
