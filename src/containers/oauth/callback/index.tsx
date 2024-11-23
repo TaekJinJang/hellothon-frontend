@@ -15,7 +15,7 @@ import useAlertStore from "@/store/alertStore";
 export default function OAuthCallbackContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const setError = useAlertStore((state) => state.setError);
+  const setAlert = useAlertStore((state) => state.setAlert);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -27,7 +27,8 @@ export default function OAuthCallbackContainer() {
         await login(code, redirectUri);
       } catch (error) {
         console.error(error);
-        setError(LOGIN_ERROR_MESSAGE);
+        setAlert(LOGIN_ERROR_MESSAGE, "error");
+
         router.push("/oauth");
       } finally {
         setIsLoading(false);
@@ -41,10 +42,10 @@ export default function OAuthCallbackContainer() {
     if (code) {
       requestAccessToken(code);
     } else {
-      setError(LOGIN_FAIL_MESSAGE);
+      setAlert(LOGIN_FAIL_MESSAGE, "error");
       router.push("/oauth");
     }
-  }, [searchParams, router, setError]);
+  }, [searchParams, router, setAlert]);
 
   return (
     <CenteredContainer>

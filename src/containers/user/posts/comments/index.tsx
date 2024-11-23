@@ -9,6 +9,7 @@ import { CommentTabs } from "./CommentTabs";
 import { ERROR_MESSAGE } from "@/utils/constants/alertMessages";
 import { NO_COMMENTS_MESSAGE } from "@/utils/constants/messages";
 import { SortSelect } from "@/components/SortSelect";
+import { showErrorAlert } from "@/components/AlertWrapper";
 import { useGetCommentsWithAsyncReplies } from "@/services/hooks/comment";
 
 type UserCommentsContainerState = {
@@ -41,6 +42,10 @@ export default function UserCommentsContainer({ postId }: { postId: string }) {
     setSortOrder(value as "newest" | "oldest");
   };
 
+  if (error) {
+    showErrorAlert(ERROR_MESSAGE);
+  }
+
   return (
     <CommentLayout postId={postId}>
       <div className="flex flex-col">
@@ -54,11 +59,7 @@ export default function UserCommentsContainer({ postId }: { postId: string }) {
           // 로딩 중일 때 스켈레톤 UI 표시
           <SkeletonCommentCardList />
         ) : sortedComments.length === 0 || error ? (
-          <div className="text-center text-slate-400  my-6">
-            {" "}
-            {error && <Alert message={ERROR_MESSAGE} />}
-            {NO_COMMENTS_MESSAGE}
-          </div>
+          <div className="text-center text-slate-400  my-6"> {NO_COMMENTS_MESSAGE}</div>
         ) : (
           sortedComments.map((comment) => <CommentCard key={comment.id} comment={comment} type={tab} postId={postId} />)
         )}

@@ -3,14 +3,14 @@
 import { CheckSquare, XSquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-interface ErrorAlertProps {
+interface AlertProps {
   message: string;
   duration?: number; // 알림이 유지되는 시간 (기본값: 5000ms)
-  type?: "error" | "success"; // 알림 타입: 기본값은 "error"
+  type?: "error" | "success" | null; // 알림 타입: 기본값은 "error"
   onClose?: () => void; // 알림이 닫힐 때 실행할 콜백 함수
 }
 
-const Alert = ({ message, duration = 5000, type = "error", onClose }: ErrorAlertProps) => {
+const Alert = ({ message, duration = 5000, type = "error", onClose }: AlertProps) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 

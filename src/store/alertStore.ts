@@ -1,13 +1,15 @@
 import { create } from "zustand";
 
-interface AuthState {
-  error: string | null;
-  setError: (error: string | null) => void;
+interface AlertState {
+  message: string | null;
+  type: "error" | "success" | null;
+  setAlert: (message: string | null, type: "error" | "success" | null) => void;
 }
 
-const useAlertStore = create<AuthState>((set) => ({
-  error: null,
-  setError: (error) => set({ error }),
+const useAlertStore = create<AlertState>((set) => ({
+  message: null,
+  type: null,
+  setAlert: (message, type) => set({ message, type }),
 }));
 
 export default useAlertStore;

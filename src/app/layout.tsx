@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import AlertWrapper from "@/components/AlertWrapper";
 import type { Metadata } from "next";
 import QueryProvider from "@/providers/QueryProvider";
 import localFont from "next/font/local";
@@ -36,6 +37,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ko">
       <body className={pretendard.className}>
+        <AlertWrapper />
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>

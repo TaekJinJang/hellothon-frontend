@@ -1,8 +1,9 @@
+import { ERROR_MESSAGE, SUCCESS_REPLY_UPLOAD } from "@/utils/constants/alertMessages";
 import { Edit3, RefreshCcw, Save, Send, Wand2 } from "lucide-react";
 import { postInstagramReply, postRecommendReply, updateRecommendReply } from "@/services/apis/comment";
+import { showErrorAlert, showSuccessAlert } from "@/components/AlertWrapper";
 import { useEffect, useState } from "react";
 
-import Alert from "@/utils/Alert";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -16,7 +17,6 @@ interface CommentCardProps {
 }
 interface CommentCardState {
   dotCount: number;
-  showSuccessAlert: boolean;
   showOriginalText: boolean;
   editingIndex: number | null;
   editedReply: ReplyType[];
@@ -24,7 +24,6 @@ interface CommentCardState {
 
 const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
   const [dotCount, setDotCount] = useState<CommentCardState["dotCount"]>(1);
-  const [showSuccessAlert, setShowSuccessAlert] = useState<CommentCardState["showSuccessAlert"]>(false);
   const [showOriginalText, setShowOriginalText] = useState<CommentCardState["showOriginalText"]>(false);
   const [editingIndex, setEditingIndex] = useState<CommentCardState["editingIndex"]>(null);
   const [editedReply, setEditedReply] = useState<CommentCardState["editedReply"]>([]);
@@ -43,16 +42,16 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
         return oldData.map((item) => (item.id === comment.id ? { ...item, recommendedReplies: editedReply } : item));
       });
     } catch (error) {
-      console.log("업데이트 실패");
+      showErrorAlert(ERROR_MESSAGE);
     }
   };
 
   const handlePostInstagramReply = async (commentId: string, replyObj: ReplyType) => {
     try {
       await postInstagramReply(commentId, replyObj);
-      console.log("댓글 입력 성공");
+      showSuccessAlert(SUCCESS_REPLY_UPLOAD);
     } catch (error) {
-      console.log("댓글 입력 실패");
+      showErrorAlert(ERROR_MESSAGE);
     }
   };
 
@@ -93,13 +92,6 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
 
   return (
     <div className="border rounded-lg shadow-md p-4">
-      {showSuccessAlert && (
-        <Alert
-          message="추천 댓글이 클립보드에 복사되었습니다."
-          type="success"
-          onClose={() => setShowSuccessAlert(false)}
-        />
-      )}
       <div className="border-b pb-4 mb-4">
         <div className="flex justify-between items-center">
           <p className="font-semibold">{comment.username}</p>
@@ -165,7 +157,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
                     <button
                       className="flex items-center justify-center text-slate-500 hover:text-slate-700 transition w-6 h-6 border rounded-md bg-white "
                       onClick={() => {
-                        handlePostInstagramReply(comment.id, replyObj).then(() => setShowSuccessAlert(true));
+                        handlePostInstagramReply(comment.id, replyObj);
                       }}
                     >
                       <Send size={16} />

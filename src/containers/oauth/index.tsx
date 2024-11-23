@@ -1,7 +1,6 @@
 "use client";
 
 import CenteredContainer from "@/components/CenteredContainer";
-import ErrorAlertWrapper from "@/components/ErrorAlertWrapper";
 import Image from "next/image";
 import LoginButton from "@/containers/oauth/LoginButton";
 import { SLOGAN_MESSAGE } from "@/utils/constants/messages";
@@ -20,7 +19,6 @@ export default function OAuthContainer() {
   }, [router]);
   return (
     <CenteredContainer>
-      <ErrorAlertWrapper />
       <div className="flex">
         <Image src={logo} alt="logo Image" width={280} height={120} priority />
       </div>
