@@ -1,10 +1,13 @@
 "use client";
 
 import { BarChart3, RefreshCcw, Wand2 } from "lucide-react";
+import { InsightCard, SkeletonInsightCard } from "./InsightCard";
 import { useGetEmotionalData, useGetMotivationalData } from "@/services/hooks/comment";
 
-import { InsightCard } from "./InsightCard";
+import { ERROR_MESSAGE } from "@/utils/constants/alertMessages";
 import UserLayout from "@/layouts/UserLayout";
+import { showErrorAlert } from "@/components/AlertWrapper";
+import { useEffect } from "react";
 import { useGetUserInfo } from "@/services/hooks/info";
 
 export default function UserInsightContainer() {
@@ -21,27 +24,11 @@ export default function UserInsightContainer() {
     motivationalInsight.isLoading;
   const error =
     emotionalSummary.error || emotionalInsight.error || motivationalSummary.error || motivationalInsight.error;
+  useEffect(() => {
+    showErrorAlert(ERROR_MESSAGE);
+  }, [error]);
 
   const userName = infoData?.name;
-  if (isLoading) {
-    return (
-      <UserLayout>
-        <main className="flex-1">
-          <div className="text-center p-8">데이터를 불러오는 중입니다...</div>
-        </main>
-      </UserLayout>
-    );
-  }
-
-  if (error) {
-    return (
-      <UserLayout>
-        <main className="flex-1">
-          <div className="text-center p-8 text-red-600">데이터를 불러오는데 오류가 발생했습니다.</div>
-        </main>
-      </UserLayout>
-    );
-  }
 
   return (
     <UserLayout>
@@ -52,10 +39,17 @@ export default function UserInsightContainer() {
             인사이트 관리
           </h3>
         </header>
-        <div className="flex flex-row gap-8 mb-10">
-          <InsightCard insight={emotionalInsight.data} summary={emotionalSummary.data} name={userName} />
-          <InsightCard insight={motivationalInsight.data} summary={motivationalSummary.data} name={userName} />
-        </div>
+        {isLoading || error ? (
+          <div className="flex flex-row gap-8 mb-10">
+            <SkeletonInsightCard />
+            <SkeletonInsightCard />
+          </div>
+        ) : (
+          <div className="flex flex-row gap-8 mb-10">
+            <InsightCard insight={emotionalInsight.data} summary={emotionalSummary.data} name={userName} />
+            <InsightCard insight={motivationalInsight.data} summary={motivationalSummary.data} name={userName} />
+          </div>
+        )}
       </main>
     </UserLayout>
   );
