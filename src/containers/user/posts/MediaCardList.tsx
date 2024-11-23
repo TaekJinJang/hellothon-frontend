@@ -1,5 +1,6 @@
 import { Calendar, Heart, MessageCircle } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -12,44 +13,58 @@ interface MediaCardListProps {
 
 function MediaCardList({ mediaList, width = 240, height = 380 }: MediaCardListProps) {
   return (
-    <div className="flex gap-6 pb-4 overflow-x-auto w-full">
-      {mediaList.map((media, index) => (
-        <Link href={`/user/posts/${media.id}/comments`} key={index} passHref>
-          <Card
-            key={index}
-            className={`bg-white shadow-md rounded-md flex flex-col justify-between`}
-            style={{ width: `${width}px`, height: `${height}px` }}
-          >
-            <CardHeader className="mb-4 flex justify-center items-center p-2">
-              <Image
-                src={media.thumbnail_url}
-                alt="Thumbnail"
-                width={200}
-                height={130}
-                className="object-cover rounded-md"
-              />
-            </CardHeader>
-            <CardContent className="flex-grow min-h-[60px]">
-              <p className="text-sm text-gray-600">
-                {media.caption.length > 50 ? `${media.caption.slice(0, 50)}...` : media.caption}
-              </p>
-            </CardContent>
-            <CardFooter className="flex flex-col items-start mt-4 space-y-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-slate-600 text-xs flex items-center">
-                  <Heart size={12} className="mr-1" /> {media.like_count}
-                </span>
-                <span className="text-slate-600 text-xs flex items-center">
-                  <MessageCircle size={12} className="mr-1" /> {media.comments_count}
-                </span>
-              </div>
-              <div className="text-slate-400 text-xs flex items-center">
-                <Calendar size={12} className="mr-1" /> {new Date(media.timestamp).toISOString().slice(0, 10)}
-              </div>
-            </CardFooter>
-          </Card>
-        </Link>
-      ))}
+    <div className="w-full mx-auto max-w-5xl">
+      <Carousel
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-1">
+          {mediaList.map((media, index) => (
+            <CarouselItem key={index} className="pl-1 md:basis-1/3 lg:basis-1/4">
+              <Link href={`/user/posts/${media.id}/comments`} key={index} passHref>
+                <Card
+                  key={index}
+                  className={`bg-white shadow-md rounded-md flex flex-col justify-between`}
+                  style={{ width: `${width}px`, height: `${height}px` }}
+                >
+                  <CardHeader className="mb-4 flex justify-center items-center p-2">
+                    <Image
+                      src={media.thumbnail_url}
+                      alt="Thumbnail"
+                      width={200}
+                      height={130}
+                      className="object-cover rounded-md"
+                    />
+                  </CardHeader>
+                  <CardContent className="flex-grow min-h-[60px]">
+                    <p className="text-sm text-gray-600">
+                      {media.caption.length > 50 ? `${media.caption.slice(0, 50)}...` : media.caption}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="flex flex-col items-start mt-4 space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-slate-600 text-xs flex items-center">
+                        <Heart size={12} className="mr-1" /> {media.like_count}
+                      </span>
+                      <span className="text-slate-600 text-xs flex items-center">
+                        <MessageCircle size={12} className="mr-1" /> {media.comments_count}
+                      </span>
+                    </div>
+                    <div className="text-slate-400 text-xs flex items-center">
+                      <Calendar size={12} className="mr-1" /> {new Date(media.timestamp).toISOString().slice(0, 10)}
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </div>
   );
 }
@@ -60,7 +75,7 @@ type SkeletonMediaCardListProps = {
   height?: number;
 };
 
-function SkeletonMediaCardList({ count = 6, width = 240, height = 380 }: SkeletonMediaCardListProps) {
+function SkeletonMediaCardList({ count = 4, width = 240, height = 380 }: SkeletonMediaCardListProps) {
   return (
     <div className="space-y-4">
       {/* 스켈레톤 카드 리스트 */}
