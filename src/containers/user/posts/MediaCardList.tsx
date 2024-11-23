@@ -9,18 +9,14 @@ interface MediaCardListProps {
   mediaList: MediaType[];
   width?: number;
   height?: number;
+  isCarousel?: boolean;
 }
 
-function MediaCardList({ mediaList, width = 240, height = 380 }: MediaCardListProps) {
+function MediaCardList({ mediaList, width = 240, height = 380, isCarousel = true }: MediaCardListProps) {
+  const mediaLength = mediaList.length;
   return (
     <div className="w-full mx-auto max-w-5xl">
-      <Carousel
-        opts={{
-          align: "start",
-          loop: true,
-        }}
-        className="w-full"
-      >
+      <Carousel opts={{ active: isCarousel, align: "start", startIndex: 4 }} className="w-full">
         <CarouselContent className="-ml-1">
           {mediaList.map((media, index) => (
             <CarouselItem key={index} className="pl-1 md:basis-1/3 lg:basis-1/4">
@@ -62,8 +58,12 @@ function MediaCardList({ mediaList, width = 240, height = 380 }: MediaCardListPr
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        {isCarousel && mediaLength > 4 && (
+          <>
+            <CarouselPrevious />
+            <CarouselNext />
+          </>
+        )}
       </Carousel>
     </div>
   );

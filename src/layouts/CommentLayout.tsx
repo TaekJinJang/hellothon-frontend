@@ -27,7 +27,7 @@ const CommentLayout = ({ children, postId, className }: CommentLayoutProps) => {
           {isLoading ? (
             <SkeletonMediaCardList count={1} width={240} height={468} />
           ) : (
-            mediaDetail && <MediaCardList mediaList={[mediaDetail]} width={240} height={468} />
+            mediaDetail && <MediaCardList mediaList={[mediaDetail]} width={240} height={468} isCarousel={false} />
           )}
         </div>
         <main className="flex-1 ">{children}</main>
