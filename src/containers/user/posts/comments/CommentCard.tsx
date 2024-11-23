@@ -7,8 +7,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Label } from "@/components/ui/label";
+import Lottie from "react-lottie-player";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import loadingSpinner from "@imgs/lottiLoadingSpinner.json";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface CommentCardProps {
@@ -210,13 +212,20 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
           </div>
         </div>
       )}
-      <Button
-        onClick={handleReplyReload}
-        className={`${isLoadingReplyReload ? "bg-slate-400" : "bg-slate-900 "}w-full hover:bg-slate-700 `}
-      >
-        <RefreshCcw />
-        추천 답글 재생성하기
-      </Button>
+      {comment.recommendedReplies !== undefined && (
+        <Button
+          onClick={handleReplyReload}
+          className={`${isLoadingReplyReload ? "bg-slate-400" : "bg-slate-900 hover:bg-slate-700"} w-full`}
+          disabled={isLoadingReplyReload}
+        >
+          {isLoadingReplyReload ? (
+            <Lottie className="w-6 h-6" loop animationData={loadingSpinner} play />
+          ) : (
+            <RefreshCcw />
+          )}
+          추천 답글 재생성하기
+        </Button>
+      )}
     </div>
   );
 };
