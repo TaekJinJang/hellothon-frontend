@@ -15,6 +15,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import Image from "next/image";
 import logo from "@imgs/logo.png";
+import { showSuccessAlert } from "./AlertWrapper";
 import { useGetUserInfo } from "@/services/hooks/info";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -33,6 +34,7 @@ const UserSidebar = () => {
   const handleLogOut = async () => {
     await logout();
     localStorage.removeItem("token"); // 로그아웃 처리
+    showSuccessAlert("정상적으로 로그아웃되었습니다.");
     router.push("/oauth");
   };
 

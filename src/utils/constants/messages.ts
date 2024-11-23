@@ -1,4 +1,4 @@
-export const SLOGAN_MESSAGE = "인스타그램 댓글에 내 마음을 담다.";
+export const SLOGAN_MESSAGE = "인스타그램 댓글에 마음을 담다.";
 
 export const LOADING_MESSAGE = "인플루언서님의 마음을 담는 중입니다.\n잠시만 기다려 주세요.";
 

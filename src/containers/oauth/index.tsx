@@ -25,6 +25,12 @@ export default function OAuthContainer() {
       <div className="text-slate-600 mt-4">{SLOGAN_MESSAGE}</div>
       <div>
         <LoginButton />
+        <div
+          className="text-center text-slate-400 decoration-slate-400 underline underline-offset-4 cursor-pointer"
+          onClick={() => window.open("147dfd5fa589803685e8e64afbe3a117", "_blank")}
+        >
+          로그인 전에 확인해주세요.
+        </div>
       </div>
     </CenteredContainer>
   );
