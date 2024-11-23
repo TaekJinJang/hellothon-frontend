@@ -27,7 +27,9 @@ export default function OAuthContainer() {
         <LoginButton />
         <div
           className="text-center text-slate-400 decoration-slate-400 underline underline-offset-4 cursor-pointer"
-          onClick={() => window.open("147dfd5fa589803685e8e64afbe3a117", "_blank")}
+          onClick={() =>
+            window.open("https://glow-tortoise-3eb.notion.site/147dfd5fa589803685e8e64afbe3a117", "_blank")
+          }
         >
           로그인 전에 확인해주세요.
         </div>
