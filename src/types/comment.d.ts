@@ -9,8 +9,9 @@ interface CommentType {
 }
 
 interface ReplyType {
+  id: string;
   reply: string;
 }
 type CommentWithReplyType = CommentType & {
-  recommendedReplies?: string[]; // 선택적 필드
+  recommendedReplies?: ReplyType[]; // 선택적 필드
 };

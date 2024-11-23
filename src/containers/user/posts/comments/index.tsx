@@ -60,7 +60,7 @@ export default function UserCommentsContainer({ postId }: { postId: string }) {
             {NO_COMMENTS_MESSAGE}
           </div>
         ) : (
-          sortedComments.map((comment) => <CommentCard key={comment.id} comment={comment} type={tab} />)
+          sortedComments.map((comment) => <CommentCard key={comment.id} comment={comment} type={tab} postId={postId} />)
         )}
       </div>
     </CommentLayout>

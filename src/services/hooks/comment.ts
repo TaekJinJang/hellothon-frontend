@@ -29,9 +29,8 @@ export const useGetCommentsWithAsyncReplies = (
     queryKey: ["comments", id, type],
     queryFn: () => getComments(id as string, type),
     enabled: !!id,
-    staleTime: 60 * 1000, // 1분간 데이터 유지
+    staleTime: 60 * 1000 * 5, // 5분간 데이터 유지
     retry: false,
-    placeholderData: keepPreviousData, // 이전 데이터를 유지하면서 백그라운드에서 새로운 데이터를 가져오기
   });
 
   useEffect(() => {
@@ -59,9 +58,7 @@ export const useGetCommentsWithAsyncReplies = (
                 // 추천 답글을 요청할 때 limit 전달
                 const recommendedRepliesResponse = await postRecommendReply(comment, limit);
 
-                // 추천 답글의 `reply` 값들을 추출해서 recommendedReplies에 저장
-                const replies = recommendedRepliesResponse.map((replyObj) => replyObj.reply);
-                return { ...comment, recommendedReplies: replies };
+                return { ...comment, recommendedReplies: recommendedRepliesResponse };
               } catch {
                 return comment; // 추천 답글 요청 실패 시 기존 댓글 유지
               }

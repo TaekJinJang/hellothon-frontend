@@ -1,24 +1,79 @@
-import { Copy, Wand2 } from "lucide-react";
+import { Edit3, RefreshCcw, Save, Send, Wand2 } from "lucide-react";
+import { postInstagramReply, postRecommendReply, updateRecommendReply } from "@/services/apis/comment";
 import { useEffect, useState } from "react";
 
 import Alert from "@/utils/Alert";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface CommentCardProps {
   comment: CommentWithReplyType;
   type: "positive" | "negative";
+  postId: string;
 }
 interface CommentCardState {
   dotCount: number;
   showSuccessAlert: boolean;
   showOriginalText: boolean;
+  editingIndex: number | null;
+  editedReply: ReplyType[];
 }
 
-const CommentCard = ({ comment, type }: CommentCardProps) => {
+const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
   const [dotCount, setDotCount] = useState<CommentCardState["dotCount"]>(1);
   const [showSuccessAlert, setShowSuccessAlert] = useState<CommentCardState["showSuccessAlert"]>(false);
   const [showOriginalText, setShowOriginalText] = useState<CommentCardState["showOriginalText"]>(false);
+  const [editingIndex, setEditingIndex] = useState<CommentCardState["editingIndex"]>(null);
+  const [editedReply, setEditedReply] = useState<CommentCardState["editedReply"]>([]);
+  const queryClient = useQueryClient();
+
+  const handleEditClick = (index: number) => {
+    setEditingIndex(index);
+  };
+
+  const handleSaveClick = async (replyObj: ReplyType) => {
+    setEditingIndex(null);
+    try {
+      await updateRecommendReply(replyObj);
+      queryClient.setQueryData<CommentWithReplyType[]>(["comments", postId, type], (oldData) => {
+        if (!oldData) return [];
+        return oldData.map((item) => (item.id === comment.id ? { ...item, recommendedReplies: editedReply } : item));
+      });
+    } catch (error) {
+      console.log("업데이트 실패");
+    }
+  };
+
+  const handlePostInstagramReply = async (commentId: string, replyObj: ReplyType) => {
+    try {
+      await postInstagramReply(commentId, replyObj);
+      console.log("댓글 입력 성공");
+    } catch (error) {
+      console.log("댓글 입력 실패");
+    }
+  };
+
+  const handleReplyRegenerate = async () => {
+    // 댓글 재생성 로직
+    // 추천 답글을 요청할 때 limit 전달
+    const recommendedRepliesResponse = await postRecommendReply(comment, 3);
+
+    queryClient.setQueryData(["comments", postId, type], (oldData: CommentWithReplyType[]) => {
+      if (!oldData) return []; // 캐시에 데이터가 없는 경우 빈 배열 반환
+      return oldData.map((item) => {
+        if (item.id === comment.id) {
+          return {
+            ...item,
+            recommendedReplies: recommendedRepliesResponse, // 예시로 빈 배열 설정, 실제로는 새로운 추천 답글 데이터로 업데이트해야 함
+          };
+        }
+        return item;
+      });
+    });
+  };
 
   const loadingText = `인플루언서님의 마음을 담는 중 입니다${".".repeat(dotCount)}`;
   useEffect(() => {
@@ -29,6 +84,12 @@ const CommentCard = ({ comment, type }: CommentCardProps) => {
 
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
   }, []);
+
+  useEffect(() => {
+    if (comment.recommendedReplies && editedReply.length === 0) {
+      setEditedReply(comment.recommendedReplies);
+    }
+  }, [comment.recommendedReplies, editedReply]);
 
   return (
     <div className="border rounded-lg shadow-md p-4">
@@ -65,24 +126,68 @@ const CommentCard = ({ comment, type }: CommentCardProps) => {
       </div>
 
       {comment.recommendedReplies && comment.recommendedReplies.length > 0 ? (
-        comment.recommendedReplies.map((reply, index) => (
-          <div key={index} className="border rounded-md p-4 bg-slate-50 flex justify-between items-start my-2">
-            <p className="text-slate-700 font-medium">{reply ?? loadingText}</p>
-            <button
-              className="text-slate-500 hover:text-slate-700 transition"
-              onClick={() => {
-                navigator.clipboard.writeText(reply).then(() => setShowSuccessAlert(true));
-              }}
-            >
-              <Copy />
-            </button>
-          </div>
-        ))
+        comment.recommendedReplies.map((replyObj, index) => {
+          const replyText = editedReply[index]?.reply;
+          const isOverLimit = replyText?.length > 2200;
+
+          return (
+            <div key={index} className="my-2">
+              {editingIndex === index ? (
+                <div
+                  className={`${isOverLimit ? "border-red-500 border" : "border"} bg-white rounded-md p-4 flex justify-between items-start`}
+                >
+                  <Textarea
+                    value={replyText}
+                    onChange={(e) =>
+                      setEditedReply((prev) => prev.map((r, i) => (i === index ? { ...r, reply: e.target.value } : r)))
+                    }
+                    className={"w-full mr-4 text-slate-700 font-medium border-none overflow-hidden resize-none"}
+                  />
+
+                  <button
+                    className={`flex items-center justify-center ${isOverLimit ? "text-slate-100" : "text-slate-500 hover:text-slate-700 transition"} w-6 h-6 border rounded-md bg-white `}
+                    onClick={() => handleSaveClick({ id: replyObj.id, reply: replyText })}
+                    disabled={isOverLimit}
+                  >
+                    <Save size={16} />
+                  </button>
+                </div>
+              ) : (
+                <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start">
+                  <p className="text-slate-700 font-medium">{replyObj.reply ?? loadingText}</p>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      className="flex items-center justify-center text-slate-500 hover:text-slate-700 transition w-6 h-6 border rounded-md bg-white "
+                      onClick={() => handleEditClick(index)}
+                    >
+                      <Edit3 size={16} />
+                    </button>
+                    <button
+                      className="flex items-center justify-center text-slate-500 hover:text-slate-700 transition w-6 h-6 border rounded-md bg-white "
+                      onClick={() => {
+                        handlePostInstagramReply(comment.id, replyObj).then(() => setShowSuccessAlert(true));
+                      }}
+                    >
+                      <Send size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
+              {editingIndex === index && isOverLimit && (
+                <div className="text-red-500">2200자를 초과할 수 없습니다.</div>
+              )}
+            </div>
+          );
+        })
       ) : (
         <div className="border rounded-md p-4 bg-slate-50 flex justify-between items-start">
           <p className="text-slate-700 font-medium">{loadingText}</p>
         </div>
       )}
+      <Button onClick={handleReplyRegenerate} className="bg-slate-900 w-full hover:bg-slate-700">
+        <RefreshCcw />
+        추천 답글 재생성하기
+      </Button>
     </div>
   );
 };
