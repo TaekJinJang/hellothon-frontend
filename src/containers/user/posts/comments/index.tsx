@@ -14,7 +14,7 @@ import { useGetCommentsWithAsyncReplies } from "@/services/hooks/comment";
 
 type UserCommentsContainerState = {
   tab: "positive" | "negative";
-  sortOrder: "newest" | "oldest";
+  sortOrder: "newest" | "oldest" | "like";
 };
 
 export default function UserCommentsContainer({ postId }: { postId: string }) {
@@ -28,6 +28,9 @@ export default function UserCommentsContainer({ postId }: { postId: string }) {
     if (!comments) return [];
 
     return comments.slice().sort((a, b) => {
+      if (sortOrder === "like") {
+        return b.like_count - a.like_count;
+      }
       const dateA = new Date(a.timestamp).getTime();
       const dateB = new Date(b.timestamp).getTime();
 
@@ -38,8 +41,8 @@ export default function UserCommentsContainer({ postId }: { postId: string }) {
       }
     });
   }, [comments, sortOrder]);
-  const handleSortChange = (value: "newest" | "oldest") => {
-    setSortOrder(value as "newest" | "oldest");
+  const handleSortChange = (value: "newest" | "oldest" | "like") => {
+    setSortOrder(value as "newest" | "oldest" | "like");
   };
 
   if (error) {

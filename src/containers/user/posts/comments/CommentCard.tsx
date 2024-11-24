@@ -61,7 +61,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
             if (item.id === comment.id) {
               return {
                 ...item,
-                recommendedReplies: recommendedRepliesResponse, // 예시로 빈 배열 설정, 실제로는 새로운 추천 답글 데이터로 업데이트해야 함
+                recommendedReplies: recommendedRepliesResponse,
               };
             }
             return item;
@@ -154,6 +154,7 @@ const CommentCard = ({ comment, type, postId }: CommentCardProps) => {
         <div className="font-medium mt-2">
           {type === "negative" && !showOriginalText ? comment.filtered : comment.text}
         </div>
+        <div className="text-sm text-gray-400 mt-1">좋아요 {comment.like_count}</div>
         <div className="text-sm text-gray-400 mt-1">{new Date(comment.timestamp).toISOString().slice(0, 10)}</div>
       </div>
       <div className="flex items-center text-slate-800 font-semibold pt-4 pb-2">

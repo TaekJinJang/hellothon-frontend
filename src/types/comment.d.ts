@@ -6,6 +6,7 @@ interface CommentType {
   filtered: string;
   timestamp: string;
   username: string;
+  like_count: number;
 }
 
 interface ReplyType {

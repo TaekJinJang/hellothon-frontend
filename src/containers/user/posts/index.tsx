@@ -17,7 +17,7 @@ export default function UserPostsContainer() {
   const { data, isLoading, error } = useGetMedia();
   const queryClient = useQueryClient();
 
-  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest" | "like">("newest");
 
   const handleInstagramRedirect = () => {
     // 캐시에서 사용자 정보를 가져옴
@@ -32,8 +32,14 @@ export default function UserPostsContainer() {
     }
   };
 
-  const groupMediaByMonth = (mediaList: MediaType[], sortOrder: "newest" | "oldest"): Record<string, MediaType[]> => {
+  const groupMediaByMonth = (
+    mediaList: MediaType[],
+    sortOrder: "newest" | "oldest" | "like",
+  ): Record<string, MediaType[]> => {
     const sortedMediaList = [...mediaList].sort((a, b) => {
+      if (sortOrder === "like") {
+        return b.like_count - a.like_count;
+      }
       const dateA = new Date(a.timestamp);
       const dateB = new Date(b.timestamp);
       return sortOrder === "newest" ? dateB.getTime() - dateA.getTime() : dateA.getTime() - dateB.getTime();
@@ -52,8 +58,8 @@ export default function UserPostsContainer() {
 
   const groupedData = data ? groupMediaByMonth(data, sortOrder) : {};
 
-  const handleSortChange = (value: "newest" | "oldest") => {
-    setSortOrder(value as "newest" | "oldest");
+  const handleSortChange = (value: "newest" | "oldest" | "like") => {
+    setSortOrder(value as "newest" | "oldest" | "like");
   };
 
   return (
